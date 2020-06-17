@@ -1,0 +1,99 @@
+// Define any objects required
+let BudgetCategory = function(pName, pBudgetTarget){
+    this.name = pName;
+    this.BudgetTarget = pBudgetTarget;
+}
+
+let BudgetItem = function(pDate, pName, pCategory, pAmount){
+    this.date = pDate;
+    this.name = pName;
+    this.category = pCategory;
+    this.amount = pAmount;
+}
+// End object defintion
+
+// Variables
+let localCategoryArray = [];
+let localItemArray = [];
+
+// Now comes the code that must wait to run until the document is fully loaded
+document.addEventListener("DOMContentLoaded", function (event) {
+
+    // Do these things immediately
+    // Load master data from the server (the locally-stored file)
+    //fileManager.read();
+
+
+
+    // End list of tasks to perform immediately
+
+
+    // Add recurring functions here
+    // Refresh the server-side data every 10 seconds
+    window.setInterval(function(){
+        // DEBUGGING
+        console.log("hello");
+
+        // Save categories to their own file and save detailed-item list to their own file
+        //fileManager.write();
+
+    }, 10000);
+    // End recurring functions
+    
+    // Event listeners
+    // Create a new budget category | Update the local array and add element to required select lists
+    document.getElementById("addCategory").addEventListener("click", function () {
+        // Get value(s)
+        let budgetNameValue = document.getElementById("budgetName").value;
+        let budgetTargetValue = document.getElementById("budgetTarget").value;
+
+        // Do nothing if either field is blank
+        if (budgetNameValue.trim != "" && budgetTargetValue.trim != ""){
+            // Create a new temp object
+            let temp = new BudgetCategory(budgetNameValue, budgetTargetValue);
+
+            // Update the select list for removing a category
+            let categorySelect = document.getElementById("deleteCategory");
+            let tempElement = document.createElement("option");
+            tempElement.setAttribute("id", document.getElementById("budgetName").value);
+            tempElement.setAttribute("value", document.getElementById("budgetName").value);
+            tempElement.innerHTML = document.getElementById("budgetName").value;
+            categorySelect.appendChild(tempElement);
+            // Update the select list for adding an item (category select)
+            
+
+            // Update the local array
+            localCategoryArray.push(temp);
+
+            // Reset the form
+            document.getElementById("form-1").reset();
+            document.getElementById("budgetName").focus();
+        }
+    });
+
+    // Remove a budget category
+    document.getElementById("removeCategory").addEventListener("click", function () {
+        // Get value(s)
+        let categorySelect = document.getElementById("deleteCategory").value;
+
+        // Remove selected value from the select input
+        removeElement(categorySelect);
+        
+        // Remove selected value from the local array if exists
+        let arrayIndex = localCategoryArray.indexOf(categorySelect);
+        if (arrayIndex > -1) {
+            localCategoryArray.splice(arrayIndex, 1);
+        }
+
+        // Reset the form
+        document.getElementById("form-3").reset();
+    });
+    // End event listeners
+
+    // Functions on standby
+    let removeElement = function (elmentId) {
+        var element = document.getElementById(elmentId);
+        element.parentNode.removeChild(element);
+    }
+    // End functions on standby
+});
